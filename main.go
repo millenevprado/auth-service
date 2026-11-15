@@ -78,9 +78,15 @@ func main() {
 	// Eles são protegidos pelo middleware de autenticação
 	mux.Handle("/admin/keys", app.masterKeyAuthMiddleware(http.HandlerFunc(app.createKeyHandler)))
 
+	// Injeção de falha para a demo de incidente (desligada por padrão)
+	if os.Getenv("FAULT_INJECTION_ENABLED") == "true" {
+		mux.Handle("/admin/fault", app.masterKeyAuthMiddleware(http.HandlerFunc(app.faultHandler)))
+		log.Println("Fault injection habilitada em /admin/fault")
+	}
+
 	srv := &http.Server{
 		Addr:              ":" + port,
-		Handler:           instrumentHandler(mux, "auth-service"),
+		Handler:           instrumentHandler(faultMiddleware(mux), "auth-service"),
 		ReadHeaderTimeout: 10 * time.Second,
 	}
 
