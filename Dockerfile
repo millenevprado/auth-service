@@ -10,7 +10,7 @@ RUN CGO_ENABLED=0 GOOS=linux go build -o auth-service .
 
 FROM alpine:3.22
 
-RUN apk add --no-cache ca-certificates=20260611-r0 libssl3=3.5.8-r0 libcrypto3=3.5.8-r0 && \
+RUN apk add --no-cache ca-certificates=20261020-r0 libssl3=3.5.9-r0 libcrypto3=3.5.9-r0 && \
     addgroup -S appgroup && adduser -S appuser -G appgroup
 
 WORKDIR /app
